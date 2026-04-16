@@ -13,6 +13,7 @@ ENV POSTGRES_HOST_AUTH_METHOD=trust \
     PGDATA=/var/lib/postgresql/data
 
 COPY config/postgresql.conf /etc/postgresql/postgresql.conf
+COPY config/pg_hba.conf /etc/postgresql/pg_hba.conf
 
 EXPOSE 5432
 
