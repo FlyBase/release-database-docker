@@ -1,0 +1,25 @@
+# docker-compose.yml
+services:
+  chado:
+    build: .
+    image: flybase/release-database:dev
+    container_name: flybase-chado
+    restart: unless-stopped
+    environment:
+      RELEASE: "${RELEASE:-current}"
+      RELEASE_FILE: "${RELEASE_FILE:-}"
+    ports:
+      - "${HOST_PORT:-5432}:5432"
+    volumes:
+      - chado-data:/var/lib/postgresql/data
+      - chado-dump-cache:/tmp/dump
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d flybase || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 6h   # generous: full dump load can take hours
+
+volumes:
+  chado-data:
+  chado-dump-cache:
