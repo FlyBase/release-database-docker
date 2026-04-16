@@ -1,4 +1,4 @@
-FROM postgres:13
+FROM postgres:13-bookworm
 
 # Tools used by the dump-load script
 RUN apt-get update \
@@ -12,4 +12,8 @@ ENV POSTGRES_HOST_AUTH_METHOD=trust \
     POSTGRES_DB=postgres \
     PGDATA=/var/lib/postgresql/data
 
+COPY config/postgresql.conf /etc/postgresql/postgresql.conf
+
 EXPOSE 5432
+
+CMD ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]
