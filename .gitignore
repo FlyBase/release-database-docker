@@ -214,6 +214,8 @@ load.log
 # Dump files (downloaded at runtime)
 *.sql.gz
 *.sql
+# But versioned init scripts are tracked
+!scripts/init/*.sql
 
 # Local data volumes
 data/

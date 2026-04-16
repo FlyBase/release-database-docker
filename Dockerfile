@@ -14,6 +14,7 @@ ENV POSTGRES_HOST_AUTH_METHOD=trust \
 
 COPY config/postgresql.conf /etc/postgresql/postgresql.conf
 COPY config/pg_hba.conf /etc/postgresql/pg_hba.conf
+COPY scripts/init/ /docker-entrypoint-initdb.d/
 
 EXPOSE 5432
 
