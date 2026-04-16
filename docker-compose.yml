@@ -11,15 +11,13 @@ services:
     ports:
       - "${HOST_PORT:-5432}:5432"
     volumes:
-      - chado-data:/var/lib/postgresql/data
-      - chado-dump-cache:/tmp/dump
+      # Bind mounts (not named volumes) so `docker compose down -v` cannot
+      # wipe the loaded database. To delete data, rm the host dirs explicitly.
+      - "${DATA_DIR:-./data}:/var/lib/postgresql/data"
+      - "${DUMP_DIR:-./dump-cache}:/tmp/dump"
     healthcheck:
       test: ["CMD", "/usr/local/bin/healthcheck.sh"]
       interval: 30s
       timeout: 5s
       retries: 5
       start_period: 6h   # generous: full dump load can take hours
-
-volumes:
-  chado-data:
-  chado-dump-cache:

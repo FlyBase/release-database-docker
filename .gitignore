@@ -217,5 +217,6 @@ load.log
 # But versioned init scripts are tracked
 !scripts/init/*.sql
 
-# Local data volumes
+# Local data volumes (bind mounts)
 data/
+dump-cache/

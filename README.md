@@ -16,10 +16,14 @@ docker compose up -d
 ```
 
 The first start downloads the release dump (~16 GB compressed) and loads it
-into PostgreSQL. **This takes several hours.** Disk usage peaks at ~180 GB
-during load (cached dump + database + WAL). Steady-state with the cached dump
-retained is ~172 GB; after `docker volume rm chado-dump-cache` it drops to
-~156 GB.
+into PostgreSQL. **This takes several hours.** The database and the cached
+dump live in bind-mounted host directories (`./data` and `./dump-cache` by
+default), so `docker compose down` will not delete them — data only goes
+away when you `rm` the host directories.
+
+Disk usage peaks at ~180 GB during load (cached dump + database + WAL).
+Steady-state with the cached dump retained is ~172 GB; `rm -rf dump-cache`
+drops it to ~156 GB.
 
 Once running, connect with:
 
@@ -36,6 +40,8 @@ psql -h localhost flybase flybase
 | `RELEASE` | `current` | Which release to load (e.g. `FB2026_01`, `FB2025_05`) |
 | `RELEASE_FILE` | *(auto-detected)* | Override the dump filename if you know it |
 | `HOST_PORT` | `5432` | Host port to bind PostgreSQL to |
+| `DATA_DIR` | `./data` | Host path for the PostgreSQL data directory (bind mount) |
+| `DUMP_DIR` | `./dump-cache` | Host path for the downloaded dump cache (bind mount) |
 
 Example: load a specific older release on a non-default port:
 
@@ -45,8 +51,12 @@ RELEASE=FB2025_05 HOST_PORT=5433 docker compose up -d
 
 ## Refreshing for a new release
 
+The data and dump cache are bind-mounted host directories, so you delete them
+yourself before the next load:
+
 ```bash
-docker compose down -v   # wipes the data volume AND the dump cache
+docker compose down
+rm -rf data dump-cache
 RELEASE=FB2026_02 docker compose up -d
 ```
 
