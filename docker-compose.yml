@@ -5,6 +5,10 @@ services:
     image: flybase/release-database:dev
     container_name: flybase-chado
     restart: unless-stopped
+    # PostgreSQL uses /dev/shm for parallel workers (parallel index build,
+    # parallel vacuum). Docker's default 64MB is not enough — `vacuumdb -z`
+    # after the restore fails with "could not resize shared memory segment".
+    shm_size: "4g"
     environment:
       RELEASE: "${RELEASE:-current}"
       RELEASE_FILE: "${RELEASE_FILE:-}"

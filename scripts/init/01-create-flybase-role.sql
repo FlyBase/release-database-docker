@@ -27,3 +27,10 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public
 
 -- Grant USAGE on public schema (matches existing production)
 GRANT USAGE ON SCHEMA public TO flybase;
+
+-- Database-level REVOKE only stops CREATE SCHEMA + TEMP. In PostgreSQL the
+-- built-in `public` schema grants CREATE to PUBLIC by default, which would
+-- let the flybase user CREATE TABLE in it. Revoke that separately so the
+-- role really is read-only.
+REVOKE CREATE ON SCHEMA public FROM PUBLIC;
+REVOKE CREATE ON SCHEMA public FROM flybase;
