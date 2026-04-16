@@ -205,3 +205,15 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Local working docs (not for public repo)
+plan.md
+implementation-plan.md
+load.log
+
+# Dump files (downloaded at runtime)
+*.sql.gz
+*.sql
+
+# Local data volumes
+data/
