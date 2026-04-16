@@ -10,6 +10,12 @@ services:
       RELEASE_FILE: "${RELEASE_FILE:-}"
     ports:
       - "${HOST_PORT:-5432}:5432"
+    # Explicit public DNS so the dump-download step works reliably regardless
+    # of the host resolver. In particular, the AWS VPC resolver has been seen
+    # to intermittently return NXDOMAIN for s3ftp.flybase.org.
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     volumes:
       # Bind mounts (not named volumes) so `docker compose down -v` cannot
       # wipe the loaded database. To delete data, rm the host dirs explicitly.
